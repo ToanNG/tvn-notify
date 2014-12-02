@@ -1,0 +1,27 @@
+<html>
+<head>
+	<title>Client</title>
+	<script src="http://localhost:3000/socket.io/socket.io.js"></script>
+</head>
+<body>
+	<h1>Hello, this is nha tuyen dung 2</h1>
+
+	<script>
+		var socket = io('http://localhost:3000', {path: '/socket.io/socket.io'}),
+				currentUser = {
+					id: 2,
+					role: 'nhatuyendung'
+				};
+
+		socket.on('connect', function(){
+			socket.emit('user join', currentUser);
+		});
+
+		socket.on('notify', function(message, receiverId){
+			if (receiverId === currentUser.id) {
+				alert(message);
+			}
+		});
+	</script>
+</body>
+</html>

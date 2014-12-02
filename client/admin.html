@@ -1,0 +1,32 @@
+<html>
+<head>
+	<title>Client</title>
+	<script type="text/javascript" src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+	<script src="http://localhost:3000/socket.io/socket.io.js"></script>
+</head>
+<body>
+	<h1>Hello, this is admin</h1>
+	<p>
+		<button class="confirm-btn" data-receiverid="1">Duyet tin cua nha tuyen dung ID 1</button>
+	</p>
+	<p>
+		<button class="confirm-btn" data-receiverid="2">Duyet tin cua nha tuyen dung ID 2</button>
+	</p>
+
+	<script>
+		var socket = io('http://localhost:3000', {path: '/socket.io/socket.io'}),
+				currentUser = {
+					id: 999,
+					role: 'admin'
+				};
+
+		socket.on('connect', function(){
+			socket.emit('user join', currentUser);
+		});
+
+		$('.confirm-btn').click(function(){
+			socket.emit('notify', $(this).text(), +$(this).data('receiverid'), 'ad-ntd');
+		});
+	</script>
+</body>
+</html>
