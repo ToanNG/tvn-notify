@@ -5,16 +5,16 @@
 	<script src="http://localhost:3000/socket.io/socket.io.js"></script>
 </head>
 <body>
-	<h1>Hello, this is nha tuyen dung 2</h1>
+	<h1>Hello, this is nguoi tim viec 3</h1>
 	<p>
-		<button class="confirm-btn" data-receiverid="3" data-receiverrole="nguoitimviec">Moi phong van nguoi tim viec 3</button>
+		<button class="confirm-btn" data-receiverid="2" data-receiverrole="nhatuyendung">Nop ho so cho nha tuyen dung 2</button>
 	</p>
 
 	<script>
 		var socket = io('http://localhost:3000', {path: '/socket.io/socket.io'}),
 				currentUser = {
-					id: 2,
-					role: 'nhatuyendung'
+					id: 3,
+					role: 'nguoitimviec'
 				};
 
 		socket.on('connect', function(){

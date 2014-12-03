@@ -7,10 +7,13 @@
 <body>
 	<h1>Hello, this is admin</h1>
 	<p>
-		<button class="confirm-btn" data-receiverid="1">Duyet tin cua nha tuyen dung ID 1</button>
+		<button class="confirm-btn" data-receiverid="1" data-receiverrole="nhatuyendung">Duyet tin cua nha tuyen dung ID 1</button>
 	</p>
 	<p>
-		<button class="confirm-btn" data-receiverid="2">Duyet tin cua nha tuyen dung ID 2</button>
+		<button class="confirm-btn" data-receiverid="2" data-receiverrole="nhatuyendung">Duyet tin cua nha tuyen dung ID 2</button>
+	</p>
+	<p>
+		<button class="confirm-btn" data-receiverid="3" data-receiverrole="nguoitimviec">Duyet ho so cua nguoi tim viec ID 3</button>
 	</p>
 
 	<script>
@@ -25,7 +28,8 @@
 		});
 
 		$('.confirm-btn').click(function(){
-			socket.emit('notify', $(this).text(), +$(this).data('receiverid'), 'ad-ntd');
+			// emit with message, receiver ID and receiver role
+			socket.emit('notify', $(this).text(), +$(this).data('receiverid'), $(this).data('receiverrole'));
 		});
 	</script>
 </body>

@@ -26,9 +26,22 @@ io.on('connection', function(socket){
 		});
 	});
 
-	socket.on('notify', function(message, receiverId, room){
-		console.log(message, receiverId, room);
-		socket.broadcast.to(room).emit('notify', message, receiverId);
+	socket.on('notify', function(message, receiverId, receiverRole){
+		var room;
+
+		// force half-duplex
+		if (socket.user.role === 'admin' && receiverRole === 'nhatuyendung') {
+			room = 'ad-ntd';
+		} else if (socket.user.role === 'admin' && receiverRole === 'nguoitimviec') {
+			room = 'ad-ntv';
+		} else if (socket.user.role === 'nhatuyendung' && receiverRole === 'nguoitimviec' || 
+							 socket.user.role === 'nguoitimviec' && receiverRole === 'nhatuyendung') {
+			room = 'ntd-ntv';
+		}
+
+		if (room) {
+			socket.broadcast.to(room).emit('notify', message, receiverId);
+		}
 	});
 
   socket.on('disconnect', function(){
