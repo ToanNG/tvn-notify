@@ -2,6 +2,12 @@ var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
+app.set('port', process.env.PORT || 3000);
+
+app.get('/', function(req, res){
+  res.send('<h1>Server OK</h1>');
+});
+
 io.on('connection', function(socket){
   
 	socket.on('user join', function(user){
@@ -49,6 +55,6 @@ io.on('connection', function(socket){
   });
 });
 
-http.listen(3000, function(){
-  console.log('listening on *:3000');
+http.listen(app.get('port'), function(){
+  console.log('Express server listening on port ' + app.get('port'));
 });
