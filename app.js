@@ -5,7 +5,7 @@ var io = require('socket.io')(http);
 app.set('port', process.env.PORT || 3000);
 
 app.get('/', function(req, res){
-  res.send('<h1>Server OK</h1>');
+  res.send('<h1>Server is running</h1>');
 });
 
 io.on('connection', function(socket){
@@ -25,6 +25,11 @@ io.on('connection', function(socket){
 			case 'admin':
 				rooms = ['ad-ntd', 'ad-ntv'];
 				break;
+		}
+
+		if (!rooms) {
+			socket.emit('connect error', 'User is not in any channel.');
+			return;
 		}
 
 		rooms.forEach(function(room){

@@ -2,7 +2,7 @@
 <head>
 	<title>Client</title>
 	<script type="text/javascript" src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
-	<script src="http://localhost:3000/socket.io/socket.io.js"></script>
+	<script src="http://timviecnhanh-notification.herokuapp.com/socket.io/socket.io.js"></script>
 </head>
 <body>
 	<h1>Hello, this is admin</h1>
@@ -17,7 +17,7 @@
 	</p>
 
 	<script>
-		var socket = io('http://localhost:3000', {path: '/socket.io/socket.io'}),
+		var socket = io('http://timviecnhanh-notification.herokuapp.com:80', {path: '/socket.io/socket.io'}),
 				currentUser = {
 					id: 999,
 					role: 'admin'
@@ -26,6 +26,10 @@
 		socket.on('connect', function(){
 			socket.emit('user join', currentUser);
 		});
+
+		socket.on('connect error', function(errMsg){
+			alert(errMsg);
+		})
 
 		$('.confirm-btn').click(function(){
 			// emit with message, receiver ID and receiver role

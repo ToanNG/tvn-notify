@@ -1,16 +1,16 @@
 <html>
 <head>
 	<title>Client</title>
-	<script src="http://localhost:3000/socket.io/socket.io.js"></script>
+	<script src="http://timviecnhanh-notification.herokuapp.com/socket.io/socket.io.js"></script>
 </head>
 <body>
 	<h1>Hello, this is nha tuyen dung 1</h1>
 
 	<script>
-		var socket = io('http://localhost:3000', {path: '/socket.io/socket.io'}),
+		var socket = io('http://timviecnhanh-notification.herokuapp.com:80', {path: '/socket.io/socket.io'}),
 				currentUser = {
 					id: 1,
-					role: 'nhatuyendung'
+					role: 'nhatuyendung' //admin, seeker, employer
 				};
 
 		socket.on('connect', function(){
