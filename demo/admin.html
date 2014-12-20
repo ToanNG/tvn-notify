@@ -1,0 +1,94 @@
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Timviecnhanh - Admin</title>
+
+  <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+  <!-- Include the socket.io-client library -->
+  <script src="http://localhost:3000/socket.io/socket.io.js"></script>
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+
+  <style type="text/css">
+    body {
+      padding-top: 70px;
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#">Tim viec nhanh</a>
+      </div>
+
+      <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        <ul class="nav navbar-nav navbar-right">
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Notification <span class="caret"></span></a>
+            <ul class="dropdown-menu" role="menu">
+              <li><a href="#">Empty</a></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container" role="main">
+    <div class="jumbotron">
+      <h1>Admin panel</h1>
+      <p>Click the button below to accept seeker1's profile and notify him</p>
+      <p><a href="#" id="accept-btn" class="btn btn-primary btn-lg" role="button">Accept</a></p>
+    </div>
+  </div>
+
+  <script>
+    var currentUser = {
+          id: 999,
+          role: 'admin'
+        };
+
+    /**
+     * Connect to the socket server
+     */
+    var socket = io('http://localhost:3000', {path: '/socket.io/socket.io'});
+
+    /**
+     * If connect successfully, emit an event "user join" with an user object,
+     * which is expected to have the "id" and "role" (admin, employer or seeker) 
+     * properties.
+     */
+    socket.on('connect', function(){
+      socket.emit('user join', currentUser);
+    });
+
+    /**
+     * Listen to event "connect error" to check if user has joined a room. 
+     * Client will receive a message "User fails joining room" if the current 
+     * user's role is not one of the following: admin, employer, seeker
+     */
+    socket.on('connect error', function(msg){
+      console.error(msg);
+    });
+
+    $('#accept-btn').click(function(){
+      /**
+       * Emit event "notify" with the message content, receiver's ID and role. 
+       * You can put this in a callback after creating new message in the DB
+       */
+      socket.emit('notify', 'Admin has accepted your profile', 1, 'seeker');
+    });
+  </script>
+</body>
+</html>
