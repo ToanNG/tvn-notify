@@ -7,7 +7,7 @@
 
   <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
   <!-- Include the socket.io-client library -->
-  <script src="http://localhost:3000/socket.io/socket.io.js"></script>
+  <script src="http://timviecnhanh-notification.herokuapp.com:80/socket.io/socket.io.js"></script>
 
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
@@ -72,7 +72,7 @@
     /**
      * Connect to the socket server
      */
-    var socket = io('http://localhost:3000', {path: '/socket.io/socket.io'});
+    var socket = io('http://timviecnhanh-notification.herokuapp.com:80', {path: '/socket.io/socket.io'});
 
     /**
      * If connect successfully, emit an event "user join" with an user object,
