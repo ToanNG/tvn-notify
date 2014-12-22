@@ -87,10 +87,10 @@
      * Listen to event "notify" and check the receiverId. If the message is for 
      * current user, then show pop-ups, fetch unread messages, etc.
      */
-    socket.on('notify', function(message, receiverId){
+    socket.on('notify', function(message, receiverId, sender){
       if (receiverId === currentUser.id) {
         $('#counter').text(+$('#counter').text() + 1).removeClass('hidden');
-        $('#messages-container').append('<li><a href="#">' + message + '</a></li>');
+        $('#messages-container').append('<li><a href="#">' + message + '</a> from ' + sender.role + ' ' + sender.id + '</li>');
       }
     });
 

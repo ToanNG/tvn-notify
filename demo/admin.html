@@ -87,7 +87,7 @@
        * Emit event "notify" with the message content, receiver's ID and role. 
        * You can put this in a callback after creating new message in the DB
        */
-      socket.emit('notify', 'Admin has accepted your profile', 1, 'seeker');
+      socket.emit('notify', 'Admin has accepted your profile', 1, currentUser, 'seeker');
     });
   </script>
 </body>

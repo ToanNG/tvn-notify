@@ -30,7 +30,7 @@ exports = module.exports = function(io){
       });
     });
 
-    socket.on('notify', function(message, receiverId, receiverRole){
+    socket.on('notify', function(message, receiverId, senderObj, receiverRole){
       var room;
 
       // force half-duplex
@@ -44,7 +44,7 @@ exports = module.exports = function(io){
       }
 
       if (room) {
-        socket.broadcast.to(room).emit('notify', message, receiverId);
+        socket.broadcast.to(room).emit('notify', message, receiverId, senderObj);
       }
     });
 
