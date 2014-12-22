@@ -61,10 +61,12 @@
 
     /**
      * Connect to the socket server
+     * Using http://timviecnhanh-notification.herokuapp.com:80 for development first
      */
     var socket = io('http://timviecnhanh-notification.herokuapp.com:80', {path: '/socket.io/socket.io'});
 
     /**
+     * Listen to event 'connect'
      * If connect successfully, emit an event "user join" with an user object,
      * which is expected to have the "id" and "role" (admin, employer or seeker) 
      * properties.
@@ -84,10 +86,15 @@
 
     $('#accept-btn').click(function(){
       /**
-       * Emit event "notify" with the message content, receiver's ID and role. 
-       * You can put this in a callback after creating new message in the DB
+       * Create new message in PHP server
        */
-      socket.emit('notify', 'Admin has accepted your profile', 1, currentUser, 'seeker');
+      $.post('/messages', function(){
+        /**
+         * Emit event "notify" in a callback with the message content, 
+         * receiver's ID, sender's info, and receiver's role. 
+         */
+        socket.emit('notify', 'Admin has accepted your profile', 1, currentUser, 'seeker');
+      })
     });
   </script>
 </body>
