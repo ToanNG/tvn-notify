@@ -15,6 +15,7 @@ if (cluster.isMaster) {
 
   cluster.on('exit', function(worker, code, signal){
     console.log('worker ' + worker.process.pid + ' died');
+    cluster.fork();
   }); 
 
 } else {
@@ -42,4 +43,5 @@ if (cluster.isMaster) {
 
 process.on('uncaughtException', function(err) {
   console.error((new Date).toUTCString() + ' uncaughtException:', err.message);
+  process.exit(1);
 });
