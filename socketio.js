@@ -1,55 +1,36 @@
 exports = module.exports = function(io){
+  var clients = {};
+
   io.on('connection', function(socket){
   
     socket.on('user join', function(user){
-      console.error((new Date).toUTCString() + ' user ' + user.id + ' connected');
+      if (!user || !user.id) {
+        return socket.emit('connect error', 'User fails connecting');
+      }
 
-      var rooms;
+      console.log((new Date).toUTCString() + ' user ' + user.id + ' connected');
 
       socket.user = user;
-
-      switch (user.role) {
-        case 'employer':
-          rooms = ['ad-em', 'em-se'];
-          break;
-        case 'seeker':
-          rooms = ['ad-se', 'em-se'];
-          break;
-        case 'admin':
-          rooms = ['ad-em', 'ad-se'];
-          break;
-      }
-
-      if (!rooms) {
-        socket.emit('connect error', 'User fails joining room');
-        return;
-      }
-
-      rooms.forEach(function(room){
-        socket.join(room);
-      });
+      clients[socket.user.id] = socket.id;
     });
 
-    socket.on('notify', function(message, receiverId, senderObj, receiverRole){
-      var room;
-
-      // force half-duplex
-      if (socket.user.role === 'admin' && receiverRole === 'employer') {
-        room = 'ad-em';
-      } else if (socket.user.role === 'admin' && receiverRole === 'seeker') {
-        room = 'ad-se';
-      } else if (socket.user.role === 'employer' && receiverRole === 'seeker' || 
-                 socket.user.role === 'seeker' && receiverRole === 'employer') {
-        room = 'em-se';
+    socket.on('notify', function(message, receiverId){
+      if (!socket.user) {
+        return socket.emit('connect error', 'User fails sending message');
       }
 
-      if (room) {
-        socket.broadcast.to(room).emit('notify', message, receiverId, senderObj);
+      console.log((new Date).toUTCString() + ' user ' + socket.user.id + ' sent message to user ' + receiverId);
+
+      var socketId = clients[receiverId];
+      if (socketId) {
+        io.to(socketId).emit('notify', message, socket.user);
       }
     });
 
     socket.on('disconnect', function(){
-      console.error((new Date).toUTCString() + ' user ' + socket.user.id + ' disconnected');
+      console.log((new Date).toUTCString() + ' user ' + socket.user.id + ' disconnected');
+
+      clients[socket.user.id] = undefined;
     });
 
   });
