@@ -1,47 +1,74 @@
 var cluster = require('cluster')
+  , express = require('express')
+  , net = require('net')
+  , sio = require('socket.io')
+  , sio_redis = require('socket.io-redis')
+;
+
+var port = process.env.PORT || 3000
   , numCPUs = require('os').cpus().length
-  , redis = require('socket.io-redis')
 ;
 
 if (cluster.isMaster) {
 
+  var workers = [];
+
+  var spawn = function(i){
+    workers[i] = cluster.fork();
+    console.log('worker %s started.', i);
+
+    workers[i].on('exit', function(worker, code, signal){
+      console.log('respawning worker', i);
+      spawn(i);
+    });
+  };
+
   for (var i = 0; i < numCPUs; i += 1) {
-    cluster.fork();
+    spawn(i);
   }
 
-  cluster.on('fork', function(worker){
-    console.log('forked worker ' + worker.id);
-  });
+  var worker_index = function(ip, len){
+    var s = '';
+    for (var i = 0, _len = ip.length; i < _len; i++) {
+      if (ip[i] !== '.') {
+        s += ip[i];
+      }
+    }
 
-  cluster.on('exit', function(worker, code, signal){
-    console.log('worker ' + worker.process.pid + ' died');
-    cluster.fork();
-  }); 
+    return Number(s) % len;
+  };
+
+  var server = net.createServer(function(connection){
+    var worker = workers[worker_index(connection.remoteAddress, numCPUs)];
+    worker.send('sticky-session:connection', connection);
+  }).listen(port);
 
 } else {
 
-  var app = require('express')()
-    , server = require('http').Server(app)
-    , io = require('socket.io')(server)
+  var app = new express()
+    , server = app.listen(0, 'localhost')
+    , io = sio(server)
   ;
 
-  io.adapter(redis({ host: 'localhost', port: 6379 }));
+  io.adapter(sio_redis({ host: 'localhost', port: 6379 }));
   
-  app.set('port', process.env.PORT || 3000);
-
   app.get('/', function(req, res){
     res.send('Server running');
   });
 
   require('./socketio')(io);
 
-  server.listen(app.get('port'), function(){
-    console.log('Express server listening on port ' + app.get('port'));
-  });
-  
-}
+  process.on('message', function(message, connection){
+    if (message !== 'sticky-session:connection') {
+      return;
+    }
 
-process.on('uncaughtException', function(err) {
-  console.error((new Date).toUTCString() + ' uncaughtException:', err.message);
-  process.exit(1);
-});
+    server.emit('connection', connection);
+  });
+
+  process.on('uncaughtException', function(err){
+    console.error((new Date).toUTCString() + ' uncaughtException:', err.message);
+    process.exit(1);
+  });
+
+}
