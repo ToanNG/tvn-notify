@@ -7,7 +7,7 @@
 
   <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
   <!-- Include the socket.io-client library -->
-  <script src="http://localhost:3000/socket.io/socket.io.js"></script>
+  <script src="http://timviecnhanh-notification.herokuapp.com:80/socket.io/socket.io.js"></script>
 
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
@@ -55,30 +55,26 @@
 
   <script>
     var currentUser = {
-          id: 999,
-          role: 'admin'
+          id: 999
         };
 
     /**
      * Connect to the socket server
-     * Using http://localhost:3000 for development first
+     * Using http://timviecnhanh-notification.herokuapp.com:80 for development first
      */
-    var socket = io('http://localhost:3000', {path: '/socket.io/socket.io'});
+    var socket = io('http://timviecnhanh-notification.herokuapp.com:80', {path: '/socket.io/socket.io'});
 
     /**
      * Listen to event 'connect'
      * If connect successfully, emit an event "user join" with an user object,
-     * which is expected to have the "id" and "role" (admin, employer or seeker) 
-     * properties.
+     * which is expected to have the "id" property
      */
     socket.on('connect', function(){
       socket.emit('user join', currentUser);
     });
 
     /**
-     * Listen to event "connect error" to check if user has joined a room. 
-     * Client will receive a message "User fails joining room" if the current 
-     * user's role is not one of the following: admin, employer, seeker
+     * Listen to event "connect error"
      */
     socket.on('connect error', function(msg){
       console.error(msg);
@@ -88,13 +84,13 @@
       /**
        * Create new message in PHP server
        */
-      // $.post('/messages', function(){
+      $.post('/messages', function(){
         /**
          * Emit event "notify" in a callback with the message content, 
-         * receiver's ID, sender's info, and receiver's role. 
+         * and receiver's ID
          */
         socket.emit('notify', 'Admin has accepted your profile', 1);
-      // })
+      })
     });
   </script>
 </body>

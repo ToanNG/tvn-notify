@@ -7,7 +7,7 @@
 
   <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
   <!-- Include the socket.io-client library -->
-  <script src="http://localhost:3000/socket.io/socket.io.js"></script>
+  <script src="http://timviecnhanh-notification.herokuapp.com:80/socket.io/socket.io.js"></script>
 
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
@@ -65,29 +65,27 @@
 
   <script>
     var currentUser = {
-          id: 1,
-          role: 'seeker'
+          id: 1
         };
 
     /**
      * Connect to the socket server
-     * Using http://localhost:3000 for development first
+     * Using http://timviecnhanh-notification.herokuapp.com:80 for development first
      */
-    var socket = io('http://localhost:3000', {path: '/socket.io/socket.io'});
+    var socket = io('http://timviecnhanh-notification.herokuapp.com:80', {path: '/socket.io/socket.io'});
 
     /**
      * Listen to event 'connect'
      * If connect successfully, emit an event "user join" with an user object,
-     * which is expected to have the "id" and "role" (admin, employer or seeker) 
-     * properties.
+     * which is expected to have the "id" property
      */
     socket.on('connect', function(){
       socket.emit('user join', currentUser);
     });
 
     /**
-     * Listen to event "notify". Client side can get the message, receiver's ID 
-     * and sender's info (it depends on what sender transfer when triggering 'notify')
+     * Listen to event "notify". Client side can get the message, and sender's info 
+     * (it depends on what sender transfer when triggering 'notify')
      */
     socket.on('notify', function(message, sender){
       
@@ -95,14 +93,14 @@
          * Before showing pop-up, make sure fetching unread messages 
          * from PHP server successes
          */
-        // $.get('/messages?status=unread', function(messages){
+        $.get('/messages?status=unread', function(messages){
           /**
            * Show pop-up, increase notification count, append messages into 
            * notification list, etc.
            */
-          alert(message + ' from ' + sender.role + '#' + sender.id);
-          // $('#counter').text(+$('#counter').text() + 1).removeClass('hidden');
-        // })
+          alert(message + ' from user #' + sender.id);
+          $('#counter').text(+$('#counter').text() + 1).removeClass('hidden');
+        })
       
     });
 
