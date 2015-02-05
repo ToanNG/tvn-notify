@@ -12,6 +12,12 @@
     "express": "^4.10.4",
     "socket.io": "^1.2.1",
     "redis": "~0.12.1",
-    "socket.io-redis": "~0.1.4"
+    "socket.io-redis": "~0.1.4",
+
+    "connect": "3.0.1",
+    "minimist": "1.1.0",
+    "serve-static": "1.8.0",
+    "socketcluster": ">= 1.0.5",
+    "socketcluster-client": ">= 1.0.0"
   }
 }
