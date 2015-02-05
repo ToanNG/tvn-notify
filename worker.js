@@ -48,9 +48,12 @@ module.exports.run = function (worker) {
       console.log(clients[data.receiverId]);
       var socketId = clients[data.receiverId];
       if (socketId) {
-        clients[data.receiverId].emit('notify', {message: data.message, senderId: data.receiverId});
-        //io.to(socketId).emit('notify', message, socket.user);
+        socketId.emit('notify', {message: data.message, senderId: data.receiverId});
       }
+    });
+
+    socket.on('benchmark', function(payload){
+      console.log(payload);
     });
   });
   

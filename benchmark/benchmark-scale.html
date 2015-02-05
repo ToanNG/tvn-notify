@@ -1,0 +1,72 @@
+<html>
+<head>
+  <title>Benchmark Client</title>
+  <script src="../demo/socketcluster.js"></script>
+</head>
+<body>
+  <h1>Benchmark</h1>
+
+  <script>
+    var sockets = [];
+    var maxSockets = 100; // max 10000
+    var connectionAttempts = 0;
+    var messageAttempts = 0;
+
+    function connectToWebSocket() {
+      connectionAttempts++;
+
+      var socket = {};
+
+      var ws;
+
+      (function() {
+        ws = socketCluster.connect({
+          hostname: 'localhost',
+          secure: false,
+          port: 8000
+        });
+      })();
+
+      console.log('Attempt ' + connectionAttempts);
+
+      ws.on('open', function() {
+        console.log('Connected');
+      });
+
+      ws.on('error', function() {
+        console.log('Error');
+      });
+
+      ws.on('disconnect', function() {
+        console.log('session End');
+      });
+
+      sockets.push(ws);
+
+      if (connectionAttempts < maxSockets) {
+        setTimeout(connectToWebSocket, 100);
+      }
+
+    };
+
+    connectToWebSocket();
+
+    sendMessage();
+    function sendMessage(){
+      //messageAttempts++;
+      // There are about 1000 users who are attempting to send a message every second
+      for (var i = 0; i < 1000; i ++){
+        var index = Math.floor(Math.random() * maxSockets);
+        if (sockets[index]){
+          console.log("A message is going to be sent");
+          sockets[index].emit('benchmark', {message: 'A message from client ' + index});
+        }
+      }
+      //if (messageAttempts <= 100) {
+        setTimeout(sendMessage, 1000);
+      //}
+    }
+
+  </script>
+</body>
+</html>

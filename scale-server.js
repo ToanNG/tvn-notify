@@ -3,6 +3,7 @@ console.log(argv);
 var SocketCluster = require('socketcluster').SocketCluster;
 
 var socketCluster = new SocketCluster({
+  transports: [ 'websocket', 'polling'],
   balancers: Number(argv.b) || 2,
   workers: Number(argv.w) || 4,
   stores: Number(argv.s) || 2,
