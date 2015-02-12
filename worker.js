@@ -44,11 +44,13 @@ module.exports.run = function (worker) {
       }
 
       console.log((new Date).toUTCString() + ' user ' + socket.user.id + ' sent message to user ' + data.receiverId);
+      /*
       console.log(clients);
       console.log(clients[data.receiverId]);
+      */
       var socketId = clients[data.receiverId];
       if (socketId) {
-        socketId.emit('notify', {message: data.message, senderId: data.receiverId});
+        socketId.emit('notify', {message: data.message, receiverId: data.receiverId});
       }
     });
 
