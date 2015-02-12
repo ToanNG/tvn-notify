@@ -57,10 +57,16 @@ module.exports.run = function (worker) {
     socket.on('benchmark', function(payload){
       console.log(payload);
     });
+
+    socket.on('disconnect', function(socket){
+      console.log('Socket ' + socket.id + ' was disconnected');
+      delete clients[socket.user.id];
+    });
+
+
   });
   
   scServer.on('sessionEnd', function (ssid) {
     console.log("Session " + ssid + " end");
-    clients[socket.user.id] = undefined;
   });
 };
