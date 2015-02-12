@@ -112,6 +112,9 @@
     $('.dropdown-toggle').click(function(){
       $('#counter').addClass('hidden').text(0);
     });
+    $(window).on('beforeunload', function(){
+      socket.disconnect();
+    });
   </script>
 </body>
 </html>

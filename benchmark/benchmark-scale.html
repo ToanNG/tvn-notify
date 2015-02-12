@@ -8,7 +8,7 @@
 
   <script>
     var sockets = [];
-    var maxSockets = 200; // max 200 concurrent users
+    var maxSockets = 1000; // max 1000 concurrent users
     var connectionAttempts = 0;
     var messageAttempts = 0;
 
@@ -46,8 +46,8 @@
       sockets.push(ws);
 
       if (connectionAttempts < maxSockets) {
-        // 20 connected users per second: 1s/50 = 20 users
-        setTimeout(connectToWebSocket, 50);
+        // have 5 connected users per second: 1s/200 = 5 users
+        setTimeout(connectToWebSocket, 200);
       }
 
     };

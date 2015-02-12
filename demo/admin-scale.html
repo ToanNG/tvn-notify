@@ -94,6 +94,9 @@
         socket.emit('notify', {message: 'Admin has accepted your profile', receiverId: 1});
       //})
     });
+    $(window).on('beforeunload', function(){
+      socket.disconnect();
+    });
   </script>
 </body>
 </html>
