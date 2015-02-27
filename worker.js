@@ -36,6 +36,7 @@ module.exports.run = function (worker) {
       //console.log(socket.user.id + "///////////////////////");
       //console.log(socket.session);
       clients[user.id] = socket.session;
+      console.log(clients[user.id]);
     });
 
     socket.on('notify', function(data){
@@ -44,11 +45,12 @@ module.exports.run = function (worker) {
       }
 
       console.log((new Date).toUTCString() + ' user ' + socket.user.id + ' sent message to user ' + data.receiverId);
-      console.log(clients);
-      console.log(clients[data.receiverId]);
-      var socketId = clients[data.receiverId];
-      if (socketId) {
-        socketId.emit('notify', {message: data.message, senderId: data.receiverId});
+      //console.log(clients);
+      //console.log(clients[data.receiverId]);
+      console.log(data.receiverId);
+      var socketSession = clients[data.receiverId];
+      if (socketSession) {
+        socketSession.emit('notify', {message: data.message, senderId: data.receiverId});
       }
     });
 

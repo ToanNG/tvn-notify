@@ -59,7 +59,8 @@
 
     // Initiate the connection to the server
     var socket = socketCluster.connect({
-      hostname: 'localhost',
+      hostname: '210.211.116.110',
+      //hostname: 'localhost',
       secure: false,
       port: 8000
     });
@@ -77,8 +78,8 @@
     /**
      * Listen to event "connect error"
      */
-    socket.on('connect error', function(msg){
-      console.log(msg);
+    socket.on('connect error', function(err){
+      console.log(err);
       throw 'Socket error - ' + err;
     });
 
