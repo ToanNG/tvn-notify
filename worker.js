@@ -32,7 +32,6 @@ module.exports.run = function (worker) {
       }
 
       console.log((new Date).toUTCString() + ' user ' + user.id + ' connected');
-      socket.user = user;
       //console.log(socket.user.id + "///////////////////////");
       //console.log(socket.session);
       clients[user.id] = socket.session;
@@ -40,9 +39,6 @@ module.exports.run = function (worker) {
     });
 
     socket.on('notify', function(data){
-      if (!socket.user) {
-        return socket.emit('connect error', 'User fails sending message');
-      }
 
       console.log((new Date).toUTCString() + ' user ' + socket.user.id + ' sent message to user ' + data.receiverId);
       //console.log(clients);
@@ -51,6 +47,8 @@ module.exports.run = function (worker) {
       var socketSession = clients[data.receiverId];
       if (socketSession) {
         socketSession.emit('notify', {message: data.message, senderId: data.receiverId});
+      } else {
+        return socket.emit('connect error', 'User fails sending message');
       }
     });
 
