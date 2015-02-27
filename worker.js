@@ -5,7 +5,7 @@ var path = require('path');
 
 module.exports.run = function (worker) {
   console.log('   >> Worker PID:', process.pid);
-  var clients = {};
+  var clients = [];
 
   // Get a reference to our raw Node HTTP server
   var httpServer = worker.getHTTPServer();
@@ -39,14 +39,13 @@ module.exports.run = function (worker) {
     });
 
     socket.on('notify', function(data){
-
-      console.log((new Date).toUTCString() + ' A message was sent to user ' + data.receiverId);
       //console.log(clients);
       //console.log(clients[data.receiverId]);
       console.log(data.receiverId);
       var socketSession = clients[data.receiverId];
       console.log(socketSession != undefined? "receiver is online":"socketSession is undefined");
       if (socketSession) {
+        console.log((new Date).toUTCString() + ' A message was sent to user ' + data.receiverId);
         socketSession.emit('notify', {message: data.message});
       } else {
         socket.emit('connect error', 'User fails sending message');
