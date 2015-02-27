@@ -4,9 +4,9 @@ var SocketCluster = require('socketcluster').SocketCluster;
 
 var socketCluster = new SocketCluster({
   transports: [ 'websocket', 'polling'],
-  balancers: Number(argv.b) || 1,
-  workers: Number(argv.w) || 2,
-  stores: Number(argv.s) || 1,
+  balancers: Number(argv.b) || 2,
+  workers: Number(argv.w) || 4,
+  stores: Number(argv.s) || 2,
   port: Number(argv.p) || 8000,
   appName: argv.n || 'app',
   workerController: __dirname + '/worker.js',

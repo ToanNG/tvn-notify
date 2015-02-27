@@ -48,7 +48,7 @@ module.exports.run = function (worker) {
       if (socketSession) {
         socketSession.emit('notify', {message: data.message, senderId: data.receiverId});
       } else {
-        return socket.emit('connect error', 'User fails sending message');
+        socket.emit('connect error', 'User fails sending message');
       }
     });
 
