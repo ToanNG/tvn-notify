@@ -35,18 +35,19 @@ module.exports.run = function (worker) {
       //console.log(socket.user.id + "///////////////////////");
       //console.log(socket.session);
       clients[user.id] = socket.session;
-      console.log(clients[user.id]);
+      //console.log(clients[user.id]);
     });
 
     socket.on('notify', function(data){
 
-      console.log((new Date).toUTCString() + ' user ' + socket.user.id + ' sent message to user ' + data.receiverId);
+      console.log((new Date).toUTCString() + ' A message was sent to user ' + data.receiverId);
       //console.log(clients);
       //console.log(clients[data.receiverId]);
       console.log(data.receiverId);
       var socketSession = clients[data.receiverId];
+      console.log(socketSession != undefined? "receiver is online":"socketSession is undefined");
       if (socketSession) {
-        socketSession.emit('notify', {message: data.message, senderId: data.receiverId});
+        socketSession.emit('notify', {message: data.message});
       } else {
         socket.emit('connect error', 'User fails sending message');
       }
@@ -59,6 +60,6 @@ module.exports.run = function (worker) {
   
   scServer.on('sessionEnd', function (ssid) {
     console.log("Session " + ssid + " end");
-    clients[socket.user.id] = undefined;
+    //clients[socket.user.id] = undefined;
   });
 };
