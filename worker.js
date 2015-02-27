@@ -11,7 +11,8 @@ module.exports.run = function (worker) {
   var httpServer = worker.getHTTPServer();
   // Get a reference to our realtime SocketCluster server
   var scServer = worker.getSCServer();
-  
+  if (worker.global.clients == undefined)
+      worker.global.clients = [];
   app.use(serveStatic(path.resolve(__dirname, 'demo')));
 
   httpServer.on('req', app);
@@ -33,8 +34,8 @@ module.exports.run = function (worker) {
 
       console.log((new Date).toUTCString() + ' user ' + user.id + ' connected');
       //console.log(socket.user.id + "///////////////////////");
-      //console.log(socket.session);
       clients[user.id] = socket.session;
+      worker.global.clients[user.id] = socket.session;
       //console.log(clients[user.id]);
     });
 
@@ -42,7 +43,9 @@ module.exports.run = function (worker) {
       //console.log(clients);
       //console.log(clients[data.receiverId]);
       console.log(data.receiverId);
-      var socketSession = clients[data.receiverId];
+//      var socketSession = clients[data.receiverId];
+      var socketSession = worker.global.clients[data.receiverId];
+
       console.log(socketSession != undefined? "receiver is online":"socketSession is undefined");
       if (socketSession) {
         console.log((new Date).toUTCString() + ' A message was sent to user ' + data.receiverId);

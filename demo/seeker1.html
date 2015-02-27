@@ -72,7 +72,7 @@
      * Connect to the socket server
      * Using http://timviecnhanh-notification.herokuapp.com:80 for development first
      */
-    var socket = io('http://timviecnhanh-notification.herokuapp.com:80', {path: '/socket.io/socket.io'});
+    var socket = io('http://210.211.116.110:3000', {path: '/socket.io/socket.io'});
 
     /**
      * Listen to event 'connect'
@@ -93,14 +93,14 @@
          * Before showing pop-up, make sure fetching unread messages 
          * from PHP server successes
          */
-        $.get('/messages?status=unread', function(messages){
+       // $.get('/messages?status=unread', function(messages){
           /**
            * Show pop-up, increase notification count, append messages into 
            * notification list, etc.
            */
           alert(message + ' from user #' + sender.id);
           $('#counter').text(+$('#counter').text() + 1).removeClass('hidden');
-        })
+        //})
       
     });
 

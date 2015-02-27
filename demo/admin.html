@@ -62,7 +62,7 @@
      * Connect to the socket server
      * Using http://timviecnhanh-notification.herokuapp.com:80 for development first
      */
-    var socket = io('http://timviecnhanh-notification.herokuapp.com:80', {path: '/socket.io/socket.io'});
+    var socket = io('http://210.211.116.110:3000');
 
     /**
      * Listen to event 'connect'
@@ -84,13 +84,13 @@
       /**
        * Create new message in PHP server
        */
-      $.post('/messages', function(){
+      //$.post('/messages', function(){
         /**
          * Emit event "notify" in a callback with the message content, 
          * and receiver's ID
          */
         socket.emit('notify', 'Admin has accepted your profile', 1);
-      })
+      //})
     });
   </script>
 </body>
