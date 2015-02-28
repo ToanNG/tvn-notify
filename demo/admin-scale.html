@@ -59,20 +59,17 @@
 
     // Initiate the connection to the server
     var socket = socketCluster.connect({
-      //hostname: '210.211.116.110',
-      hostname: 'localhost',
+      hostname: '210.211.116.110',
+      //hostname: 'localhost',
       secure: false,
       port: 8000
     });
 
     /**
      * Listen to event 'connect'
-     * If connect successfully, emit an event "user join" with an user object,
-     * which is expected to have the "id" property
      */
     socket.on('connect', function () {
       console.log('CONNECTED');
-      socket.emit('user join', currentUser);
     });
 
     /**
@@ -87,13 +84,11 @@
       /**
        * Create new message in PHP server
        */
-      //$.post('/messages', function(){
-        /**
-         * Emit event "notify" in a callback with the message content, 
-         * and receiver's ID
-         */
-        socket.emit('notify', {message: 'Admin has accepted your profile', receiverId: 1});
-      //})
+      /**
+       * Admin send message to user who has ID of x via channel "notifyx"
+       */
+        var receiverId = 1;
+        socket.publish('notify' + receiverId, {from: 'admin', message: 'Your profile has been accepted'});
     });
     $(window).on('beforeunload', function(){
       socket.disconnect();

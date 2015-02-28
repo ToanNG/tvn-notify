@@ -76,21 +76,38 @@
     });
 
     /**
-     * Listen to event 'connect', if connection was established sucessfully, user subscribe "notifyx" channel to receive message from admin
+     * Listen to event 'connect'
+     * If connect successfully, emit an event "user join" with an user object,
+     * which is expected to have the "id" property
      */
-
-    socket.on('connect', function () {
-      console.log('CONNECTED');
-      var notifyChannel = socket.subscribe('notify' + currentUser.id);
-
-      notifyChannel.watch(function (data) {
-        alert(data.message);
-        $('#counter').text(+$('#counter').text() + 1).removeClass('hidden');
-      });
-    });
 
     socket.on('error', function (err) {
       throw 'Socket error - ' + err;
+    });
+    socket.on('connect', function () {
+      console.log('CONNECTED');
+      socket.emit('user join', currentUser);
+    });
+
+    /**
+     * Listen to event "notify". Client side can get the message, and sender's info 
+     * (it depends on what sender transfer when triggering 'notify')
+     */
+    socket.on('notify', function(data){
+      
+        /**
+         * Before showing pop-up, make sure fetching unread messages 
+         * from PHP server successes
+         */
+        //$.get('/messages?status=unread', function(messages){
+          /**
+           * Show pop-up, increase notification count, append messages into 
+           * notification list, etc.
+           */
+          alert(data.message);
+          $('#counter').text(+$('#counter').text() + 1).removeClass('hidden');
+        //})
+      
     });
 
     $('.dropdown-toggle').click(function(){

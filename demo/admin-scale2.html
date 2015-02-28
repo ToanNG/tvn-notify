@@ -3,7 +3,7 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Timviecnhanh - Seeker1</title>
+  <title>Timviecnhanh - Admin</title>
 
   <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="socketcluster.js"></script>
@@ -15,16 +15,6 @@
   <style type="text/css">
     body {
       padding-top: 70px;
-    }
-
-    #counter {
-      position: relative;
-      top: -5px;
-      padding: 3px 4px;
-      font-size: 11px;
-      color: #fff;
-      background-color: #cc0000;
-      border-radius: 3px;
     }
   </style>
 </head>
@@ -44,11 +34,9 @@
       <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
         <ul class="nav navbar-nav navbar-right">
           <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-              Notification
-              <span id="counter" class="hidden">0</span>
-            </a>
-            <ul id="messages-container" class="dropdown-menu" role="menu">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Notification <span class="caret"></span></a>
+            <ul class="dropdown-menu" role="menu">
+              <li><a href="#">Empty</a></li>
             </ul>
           </li>
         </ul>
@@ -58,13 +46,15 @@
 
   <div class="container" role="main">
     <div class="jumbotron">
-      <h1>Seeker1</h1>
+      <h1>Admin panel</h1>
+      <p>Click the button below to accept seeker1's profile and notify him</p>
+      <p><a href="#" id="accept-btn" class="btn btn-primary btn-lg" role="button">Accept</a></p>
     </div>
   </div>
 
   <script>
     var currentUser = {
-          id: 1
+          id: 999
         };
 
     // Initiate the connection to the server
@@ -76,25 +66,34 @@
     });
 
     /**
-     * Listen to event 'connect', if connection was established sucessfully, user subscribe "notifyx" channel to receive message from admin
+     * Listen to event 'connect'
+     * If connect successfully, emit an event "user join" with an user object,
+     * which is expected to have the "id" property
      */
-
     socket.on('connect', function () {
       console.log('CONNECTED');
-      var notifyChannel = socket.subscribe('notify' + currentUser.id);
-
-      notifyChannel.watch(function (data) {
-        alert(data.message);
-        $('#counter').text(+$('#counter').text() + 1).removeClass('hidden');
-      });
+      socket.emit('user join', currentUser);
     });
 
-    socket.on('error', function (err) {
+    /**
+     * Listen to event "connect error"
+     */
+    socket.on('connect error', function(err){
+      console.log(err);
       throw 'Socket error - ' + err;
     });
 
-    $('.dropdown-toggle').click(function(){
-      $('#counter').addClass('hidden').text(0);
+    $('#accept-btn').click(function(){
+      /**
+       * Create new message in PHP server
+       */
+      //$.post('/messages', function(){
+        /**
+         * Emit event "notify" in a callback with the message content, 
+         * and receiver's ID
+         */
+        socket.emit('notify', {message: 'Admin has accepted your profile', receiverId: 1});
+      //})
     });
     $(window).on('beforeunload', function(){
       socket.disconnect();
