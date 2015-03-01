@@ -12,12 +12,12 @@ var socketCluster = new SocketCluster({
   appName: argv.n || 'app',
   workerController: __dirname + '/worker.js',
   socketChannelLimit: 100,
-  rebootWorkerOnCrash: !argv.debug,
+  rebootWorkerOnCrash: !argv.debug/*,
   protocol: 'https',
   protocolOptions: {
     key: fs.readFileSync('tvn-key.pem', 'utf8'),
     cert: fs.readFileSync('tvn-cert.pem', 'utf8'),
     passphrase: ''
-  }
+  }*/
   
 });
