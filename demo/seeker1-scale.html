@@ -77,12 +77,12 @@
 
     socket.on('connect', function(){
       console.log('CONNECTED');
-
       socket.emit('user join', currentUser);
-      socket.on('user join successfully', function(){
-        socket.subscribe('notify-' + currentUser.id).watch(function(data){
-          alert(data.message);
-        });
+    });
+
+    socket.on('user join successfully', function(){
+      socket.subscribe('notify-' + currentUser.id).watch(function(data){
+        alert(data.message);
       });
     });
 

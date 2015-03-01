@@ -40,7 +40,7 @@ module.exports.run = function (worker) {
               if (isAuthenticated) {
                 next(); // Allow subscribe
               } else {
-                next('Handshake failed'); // Block
+                next('Subscribe failed'); // Block
               }
             }
           }
