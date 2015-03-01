@@ -54,42 +54,35 @@
 
   <script>
     var currentUser = {
-          id: 999
+          id: 999,
+          ssid: 'ssid999'
         };
 
-    // Initiate the connection to the server
     var socket = socketCluster.connect({
-      hostname: '210.211.116.110',
-      //hostname: 'localhost',
+      // hostname: '210.211.116.110',
+      hostname: 'localhost',
       secure: false,
       port: 8000
     });
 
-    /**
-     * Listen to event 'connect'
-     */
-    socket.on('connect', function () {
+    socket.on('connect', function(){
       console.log('CONNECTED');
+      socket.emit('user join', currentUser);
+      socket.subscribe(currentUser.id).watch(function(data){
+        alert(data.message);
+        $('#counter').text(+$('#counter').text() + 1).removeClass('hidden');
+      });
     });
 
-    /**
-     * Listen to event "connect error"
-     */
     socket.on('connect error', function(err){
       console.log(err);
       throw 'Socket error - ' + err;
     });
 
     $('#accept-btn').click(function(){
-      /**
-       * Create new message in PHP server
-       */
-      /**
-       * Admin send message to user who has ID of x via channel "notifyx"
-       */
-        var receiverId = 1;
-        socket.publish('notify' + receiverId, {from: 'admin', message: 'Your profile has been accepted'});
+      socket.publish('1', {message: 'testing message'});
     });
+
     $(window).on('beforeunload', function(){
       socket.disconnect();
     });

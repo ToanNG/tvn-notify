@@ -64,38 +64,34 @@
 
   <script>
     var currentUser = {
-          id: 1
+          id: 1,
+          ssid: 'ssid1'
         };
 
-    // Initiate the connection to the server
     var socket = socketCluster.connect({
-      hostname: '210.211.116.110',
-      //hostname: 'localhost',
+      // hostname: '210.211.116.110',
+      hostname: 'localhost',
       secure: false,
       port: 8000
     });
 
-    /**
-     * Listen to event 'connect', if connection was established sucessfully, user subscribe "notifyx" channel to receive message from admin
-     */
-
-    socket.on('connect', function () {
+    socket.on('connect', function(){
       console.log('CONNECTED');
-      var notifyChannel = socket.subscribe('notify' + currentUser.id);
-
-      notifyChannel.watch(function (data) {
+      socket.emit('user join', currentUser);
+      socket.subscribe(currentUser.id).watch(function(data){
         alert(data.message);
         $('#counter').text(+$('#counter').text() + 1).removeClass('hidden');
       });
     });
 
-    socket.on('error', function (err) {
+    socket.on('error', function(err){
       throw 'Socket error - ' + err;
     });
 
     $('.dropdown-toggle').click(function(){
       $('#counter').addClass('hidden').text(0);
     });
+
     $(window).on('beforeunload', function(){
       socket.disconnect();
     });
