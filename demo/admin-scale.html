@@ -68,10 +68,6 @@
     socket.on('connect', function(){
       console.log('CONNECTED');
       socket.emit('user join', currentUser);
-      socket.subscribe(currentUser.id).watch(function(data){
-        alert(data.message);
-        $('#counter').text(+$('#counter').text() + 1).removeClass('hidden');
-      });
     });
 
     socket.on('connect error', function(err){
@@ -80,7 +76,7 @@
     });
 
     $('#accept-btn').click(function(){
-      socket.publish('1', {message: 'testing message'});
+      socket.publish('notify-1', {message: 'testing message'});
     });
 
     $(window).on('beforeunload', function(){

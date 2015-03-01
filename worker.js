@@ -19,6 +19,7 @@ module.exports.run = function (worker) {
   scServer.on('connection', function (socket) {
     socket.on('user join', function(user){
       socket.sessionIdentification = user.ssid;
+      socket.emit('user join successfully');
     });
 
     socket.on('notify', function(data){
