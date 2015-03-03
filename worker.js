@@ -9,6 +9,10 @@ module.exports.run = function (worker) {
   
   var scServer = worker.getSCServer();
 
+  var httpServer = worker.getHTTPServer();
+  app.use(serveStatic(path.resolve(__dirname, 'demo')));
+  httpServer.on('req', app);
+
   scServer.addMiddleware(scServer.MIDDLEWARE_SUBSCRIBE,
     function (socket, channel, next) {
       var sessionId = socket.sessionIdentification;

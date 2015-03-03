@@ -57,28 +57,37 @@
           id: 999,
           ssid: 'ssid999'
         };
+    //ssid is tvn's Session ID which is used for authentication purpose (later)
 
+    //open a socket connection
     var socket = socketCluster.connect({
       // hostname: '210.211.116.110',
       hostname: 'localhost',
-      secure: false,
+      secure: false,   /* false for HTTP, true for HTTPS protocol */
       port: 8000
     });
 
     socket.on('connect', function(){
+      //do something after socket connection has been established
       console.log('CONNECTED');
+
+      //sending the admin session for authentication purpose (later)
       socket.emit('user join', currentUser);
     });
 
     socket.on('connect error', function(err){
+      //do something if fail to establish socket connection
       console.log(err);
       throw 'Socket error - ' + err;
     });
 
+
     $('#accept-btn').click(function(){
+      // Admin sends message to channel "notify-1" which is subscribed by user1
       socket.publish('notify-1', {message: 'testing message'});
     });
 
+    //disconnect socket connection when page is closed
     $(window).on('beforeunload', function(){
       socket.disconnect();
     });
